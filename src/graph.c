@@ -57,7 +57,7 @@ struct graph_s read_graph() {
 
     while (getline(&line, &line_size, stdin) != -1) {
         if (!push_empty_node(&graph, &graph_capacity)) {
-            break;
+            goto error;
         }
 
         size_t node_capacity = 0;
@@ -66,12 +66,12 @@ struct graph_s read_graph() {
             size_t adjacency_idx = strtoul(adjacency_str, NULL, 0);
             if (adjacency_idx == ULONG_MAX) {
                 perror("strtoul");
-                break;
+                goto error;
             }
 
             if (!push_adjacency(&graph.nodes[graph.nodes_size - 1],
                                 &node_capacity, adjacency_idx)) {
-                break;
+                goto error;
             }
             adjacency_str = strtok(NULL, " ");
         }
@@ -82,6 +82,12 @@ struct graph_s read_graph() {
     }
 
     free(line);
+    return graph;
+
+error:
+    free(line);
+    free_graph(graph);
+    graph.nodes = NULL;
     return graph;
 }
 

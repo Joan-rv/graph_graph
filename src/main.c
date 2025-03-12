@@ -6,6 +6,9 @@ int main(void) {
     const int screen_height = 450;
 
     struct graph_s graph = read_graph();
+    if (graph.nodes == NULL) {
+        return -1;
+    }
     print_graph(graph);
 
     InitWindow(screen_width, screen_height, "graph_graph");
@@ -21,6 +24,7 @@ int main(void) {
     }
 
     CloseWindow();
+    free_graph(graph);
 
     return 0;
 }
