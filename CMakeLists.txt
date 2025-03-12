@@ -14,7 +14,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-add_executable(graph_graph src/main.c)
+add_executable(graph_graph src/main.c src/graph.c)
 target_link_libraries(graph_graph PRIVATE raylib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
