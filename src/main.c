@@ -6,18 +6,15 @@ int main(int argc, char **argv) {
     const int screen_width = 800;
     const int screen_height = 450;
 
-    FILE *i_stream;
-    if (argc == 1) {
-        i_stream = stdin;
-    } else if (argc == 2) {
-        i_stream = fopen(argv[1], "r");
-    }
-
     struct graph_s graph;
     if (argc == 1) {
         graph = read_graph(stdin);
     } else if (argc == 2) {
         FILE *i_file = fopen(argv[1], "r");
+        if (i_file == NULL) {
+            perror("Could not open file");
+            return -1;
+        }
         graph = read_graph(i_file);
         fclose(i_file);
     } else if (argc > 2) {
