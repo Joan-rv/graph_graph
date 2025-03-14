@@ -39,6 +39,8 @@ int main(int argc, char **argv) {
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        float dt = GetFrameTime();
+        update_graph_positions(graph, node_positions, dt);
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
