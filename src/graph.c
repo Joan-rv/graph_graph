@@ -62,6 +62,7 @@ struct graph_s read_graph(FILE *stream) {
 
         size_t node_capacity = 0;
         char *adjacency_str = strtok(line, " ");
+        struct graph_node_s *node = &graph.nodes[graph.nodes_size - 1];
         while (adjacency_str) {
             size_t adjacency_idx = strtoul(adjacency_str, NULL, 0);
             if (adjacency_idx == ULONG_MAX) {
@@ -69,17 +70,29 @@ struct graph_s read_graph(FILE *stream) {
                 goto error;
             }
 
-            if (!push_adjacency(&graph.nodes[graph.nodes_size - 1],
-                                &node_capacity, adjacency_idx)) {
+            if (!push_adjacency(node, &node_capacity, adjacency_idx)) {
                 goto error;
             }
             adjacency_str = strtok(NULL, " ");
         }
+
+        size_t *new_adjacencies =
+            realloc(node->adjacencies, node->adjacencies_size * sizeof(size_t));
+        if (new_adjacencies == NULL)
+            goto error;
+        node->adjacencies = new_adjacencies;
     }
 
     if (ferror(stream)) {
         perror("getline");
+        goto error;
     }
+
+    struct graph_node_s *new_nodes =
+        realloc(graph.nodes, graph.nodes_size * sizeof(struct graph_node_s));
+    if (new_nodes == NULL)
+        goto error;
+    graph.nodes = new_nodes;
 
     free(line);
     return graph;
