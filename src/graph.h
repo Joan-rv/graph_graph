@@ -1,3 +1,6 @@
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include <stddef.h>
 #include <stdio.h>
 
@@ -14,3 +17,5 @@ struct graph_s {
 struct graph_s read_graph(FILE *stream);
 void print_graph(struct graph_s graph);
 void free_graph(struct graph_s graph);
+
+#endif
