@@ -42,9 +42,7 @@ int main(int argc, char **argv) {
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
-            for (size_t i = 0; i < graph.nodes_size; i++) {
-                DrawCircleV(node_positions[i], 10.0f, RED);
-            }
+            draw_graph(graph, node_positions);
         }
         EndDrawing();
     }

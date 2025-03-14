@@ -5,5 +5,6 @@
 #include <raylib.h>
 
 Vector2 *initialize_positions(struct graph_s graph, int width, int height);
+void draw_graph(struct graph_s graph, Vector2 *positions);
 
 #endif
