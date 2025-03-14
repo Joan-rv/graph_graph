@@ -1,6 +1,8 @@
 #include "graph.h"
+#include "graph_draw.h"
 #include <raylib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
     const int screen_width = 800;
@@ -26,6 +28,13 @@ int main(int argc, char **argv) {
     }
     print_graph(graph);
 
+    Vector2 *node_positions =
+        initialize_positions(graph, screen_width, screen_height);
+    if (node_positions == NULL) {
+        free_graph(graph);
+        return -1;
+    }
+
     InitWindow(screen_width, screen_height, "graph_graph");
     SetTargetFPS(60);
 
@@ -33,12 +42,15 @@ int main(int argc, char **argv) {
         BeginDrawing();
         {
             ClearBackground(RAYWHITE);
-            DrawText("Hello world", 340, 200, 20, LIGHTGRAY);
+            for (size_t i = 0; i < graph.nodes_size; i++) {
+                DrawCircleV(node_positions[i], 10.0f, RED);
+            }
         }
         EndDrawing();
     }
 
     CloseWindow();
+    free(node_positions);
     free_graph(graph);
 
     return 0;
