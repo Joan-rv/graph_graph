@@ -49,13 +49,13 @@ bool push_adjacency(struct graph_node_s *node, size_t *capacity,
     return true;
 }
 
-struct graph_s read_graph() {
+struct graph_s read_graph(FILE *stream) {
     struct graph_s graph = {.nodes = NULL, .nodes_size = 0};
     size_t graph_capacity = 0;
     char *line = NULL;
     size_t line_size;
 
-    while (getline(&line, &line_size, stdin) != -1) {
+    while (getline(&line, &line_size, stream) != -1) {
         if (!push_empty_node(&graph, &graph_capacity)) {
             goto error;
         }
@@ -77,7 +77,7 @@ struct graph_s read_graph() {
         }
     }
 
-    if (ferror(stdin)) {
+    if (ferror(stream)) {
         perror("getline");
     }
 

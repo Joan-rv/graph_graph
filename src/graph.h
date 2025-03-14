@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdio.h>
 
 struct graph_node_s {
     size_t *adjacencies;
@@ -10,6 +11,6 @@ struct graph_s {
     size_t nodes_size;
 };
 
-struct graph_s read_graph();
+struct graph_s read_graph(FILE *stream);
 void print_graph(struct graph_s graph);
 void free_graph(struct graph_s graph);

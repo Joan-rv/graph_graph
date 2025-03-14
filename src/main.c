@@ -1,11 +1,29 @@
 #include "graph.h"
 #include <raylib.h>
+#include <stdio.h>
 
-int main(void) {
+int main(int argc, char **argv) {
     const int screen_width = 800;
     const int screen_height = 450;
 
-    struct graph_s graph = read_graph();
+    FILE *i_stream;
+    if (argc == 1) {
+        i_stream = stdin;
+    } else if (argc == 2) {
+        i_stream = fopen(argv[1], "r");
+    }
+
+    struct graph_s graph;
+    if (argc == 1) {
+        graph = read_graph(stdin);
+    } else if (argc == 2) {
+        FILE *i_file = fopen(argv[1], "r");
+        graph = read_graph(i_file);
+        fclose(i_file);
+    } else if (argc > 2) {
+        printf("Usage:\n%s: [file]\n", argv[0]);
+        return -1;
+    }
     if (graph.nodes == NULL) {
         return -1;
     }
