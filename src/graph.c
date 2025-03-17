@@ -49,6 +49,16 @@ bool push_adjacency(struct graph_node_s *node, size_t *capacity,
     return true;
 }
 
+int edge_cmp(const void *pa, const void *pb) {
+    size_t a = *(const size_t *)pa;
+    size_t b = *(const size_t *)pb;
+    if (a < b)
+        return -1;
+    if (a == b)
+        return 0;
+    return 1;
+}
+
 struct graph_s read_graph(FILE *stream) {
     struct graph_s graph = {.nodes = NULL, .nodes_size = 0};
     size_t graph_capacity = 0;
@@ -81,6 +91,8 @@ struct graph_s read_graph(FILE *stream) {
         if (new_adjacencies == NULL)
             goto error;
         node->adjacencies = new_adjacencies;
+        qsort(node->adjacencies, node->adjacencies_size, sizeof(size_t),
+              &edge_cmp);
     }
 
     if (ferror(stream)) {
