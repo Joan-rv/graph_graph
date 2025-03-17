@@ -59,6 +59,18 @@ int edge_cmp(const void *pa, const void *pb) {
     return 1;
 }
 
+bool graph_validate(const struct graph_s graph) {
+    for (size_t i = 0; i < graph.nodes_size; i++) {
+        const struct graph_node_s node = graph.nodes[i];
+        for (size_t j = 0; j < node.adjacencies_size; j++) {
+            if (node.adjacencies[j] == i ||
+                node.adjacencies[j] >= graph.nodes_size)
+                return false;
+        }
+    }
+    return true;
+}
+
 struct graph_s read_graph(FILE *stream) {
     struct graph_s graph = {.nodes = NULL, .nodes_size = 0};
     size_t graph_capacity = 0;
@@ -97,6 +109,11 @@ struct graph_s read_graph(FILE *stream) {
 
     if (ferror(stream)) {
         perror("getline");
+        goto error;
+    }
+
+    if (!graph_validate(graph)) {
+        fprintf(stderr, "Invalid graph\n");
         goto error;
     }
 
