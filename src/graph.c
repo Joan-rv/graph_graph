@@ -116,7 +116,7 @@ error:
     return graph;
 }
 
-void print_graph(struct graph_s graph) {
+void print_graph(const struct graph_s graph) {
     for (size_t i = 0; i < graph.nodes_size; i++) {
         struct graph_node_s *node = &graph.nodes[i];
         size_t j;
