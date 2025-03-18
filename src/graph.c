@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <errno.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -82,12 +83,16 @@ struct graph_s read_graph(FILE *stream) {
             goto error;
         }
 
+        if (*line == '\n')
+            continue;
+
         size_t node_capacity = 0;
         char *adjacency_str = strtok(line, " ");
         struct graph_node_s *node = &graph.nodes[graph.nodes_size - 1];
         while (adjacency_str) {
+            errno = 0;
             size_t adjacency_idx = strtoul(adjacency_str, NULL, 0);
-            if (adjacency_idx == ULONG_MAX) {
+            if (errno != 0) {
                 perror("strtoul");
                 goto error;
             }
