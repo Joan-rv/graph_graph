@@ -50,7 +50,7 @@ bool push_adjacency(struct graph_node_s *node, size_t *capacity,
     return true;
 }
 
-int edge_cmp(const void *pa, const void *pb) {
+int adjacency_cmp(const void *pa, const void *pb) {
     size_t a = *(const size_t *)pa;
     size_t b = *(const size_t *)pb;
     if (a < b)
@@ -60,12 +60,34 @@ int edge_cmp(const void *pa, const void *pb) {
     return 1;
 }
 
+ssize_t adjacency_search(const struct graph_node_s node, size_t target) {
+    if (node.adjacencies_size == 0)
+        return -1;
+    size_t l = 0, r = node.adjacencies_size - 1;
+    while (l <= r) {
+        size_t m = (l + r) / 2;
+        if (node.adjacencies[m] == target) {
+            return m;
+        } else if (node.adjacencies[m] < target) {
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+    return -1;
+}
+
+bool adjacency_validate(size_t self, size_t other, const struct graph_s graph) {
+    return adjacency_search(graph.nodes[other], self) != -1;
+}
+
 bool graph_validate(const struct graph_s graph) {
     for (size_t i = 0; i < graph.nodes_size; i++) {
         const struct graph_node_s node = graph.nodes[i];
         for (size_t j = 0; j < node.adjacencies_size; j++) {
             if (node.adjacencies[j] == i ||
-                node.adjacencies[j] >= graph.nodes_size)
+                node.adjacencies[j] >= graph.nodes_size ||
+                !adjacency_validate(i, node.adjacencies[j], graph))
                 return false;
         }
     }
@@ -109,7 +131,7 @@ struct graph_s read_graph(FILE *stream) {
             goto error;
         node->adjacencies = new_adjacencies;
         qsort(node->adjacencies, node->adjacencies_size, sizeof(size_t),
-              &edge_cmp);
+              &adjacency_cmp);
     }
 
     if (ferror(stream)) {
